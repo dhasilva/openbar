@@ -1,6 +1,10 @@
-const { on } = require('events');
+// Node
+import { on } from 'events';
 
+// Base
 import BaseModule from './base.module.mjs';
+
+// Service
 import RAMService from '../services/ram.service.mjs';
 
 export default class RAMModule extends BaseModule {
@@ -22,8 +26,13 @@ export default class RAMModule extends BaseModule {
     }
   }
 
+  get icon() {
+    // Siji
+    return '';
+  }
+
   readLast() {
-    this.data = this.transform(this.service.lastData) || '󰘚 --- (--%)';
+    this.data = this.transform(this.service.lastData) || `${this.icon}--- (--%)`;
   }
 
   transform(data) {
@@ -36,9 +45,6 @@ export default class RAMModule extends BaseModule {
 
     const humanized = humanizeBytes(used, 1);
 
-    // const magnitude = humanized.value.split('.')[0];
-    // const padded = `${' '.repeat(3 - magnitude.length)}${humanized}`;
-
-    return `󰘚 ${humanized} (${usedPercentage}%)`;
+    return `${this.icon}${humanized} (${usedPercentage}%)`;
   }
 }

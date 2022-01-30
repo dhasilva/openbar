@@ -1,6 +1,10 @@
-const { on } = require('events');
+// Node
+import { on } from 'events';
 
+// Base
 import BaseModule from './base.module.mjs';
+
+// Service
 import DateService from '../services/date.service.mjs';
 
 export default class DateModule extends BaseModule {
@@ -22,14 +26,19 @@ export default class DateModule extends BaseModule {
     }
   }
 
+  get icon() {
+    // Siji
+    return '';
+  }
+
   readLast() {
-    this.data = this.transform(this.service.lastData) || '󰸗 ---';
+    this.data = this.transform(this.service.lastData) || `${this.icon}---`;
   }
 
   transform(data) {
     if (data === null) return;
 
     const [firstLetter, ...rest] = data;
-    return `󰸗 ${firstLetter.toUpperCase()}${rest.join('')}`;
+    return `${this.icon}${firstLetter.toUpperCase()}${rest.join('')}`;
   }
 }

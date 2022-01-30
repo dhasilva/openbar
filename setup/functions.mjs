@@ -1,6 +1,12 @@
+// Returns the string response without \n at the end. For simple commands.
+export async function $s(pieces, ...args) {
+  return (await $(pieces, ...args)).toString().replace(/\n$/, '');
+}
+
 // Disables automatic quotes. Use with caution.
-$.raw = (pieces, ...args) => {
+export function $raw(pieces, ...args) {
   let str = pieces[0];
+
   for (let i = 0; i < args.length; i += 1) {
     str += args[i] + pieces[i+1];
   }
@@ -8,28 +14,12 @@ $.raw = (pieces, ...args) => {
   return $([str]);
 }
 
-// Returns the string response without \n at the end. For simple commands.
-export async function $s(pieces, ...args) {
-  return (await $(pieces, ...args)).toString().replace(/\n$/, '');
+export async function $sRaw(pieces, ...args) {
+  return (await $raw(pieces, ...args)).toString().replace(/\n$/, '');
 }
-
-$s.raw = async (pieces, ...args) => {
-  return (await $.raw(pieces, ...args)).toString().replace(/\n$/, '');
-}
-
-const suffixes = [
-  'B',
-  'KiB',
-  'MiB',
-  'GiB',
-  'TiB',
-  'PiB',
-  'EiB',
-  'ZiB',
-  'YiB',
-]
 
 export function humanizeBytes(bytes, precision = null) {
+  const suffixes = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
   let value = bytes;
   let iteration = 0;
 
@@ -50,4 +40,4 @@ export function humanizeBytes(bytes, precision = null) {
   }
 }
 
-Object.assign(global, { $s, sleep, humanizeBytes });
+Object.assign(globalThis, { $s, $sRaw, $raw, humanizeBytes });

@@ -1,13 +1,17 @@
-const { on } = require('events');
+// Node
+import { on } from 'events';
 
+// Base
 import BaseModule from './base.module.mjs';
-import NetworkService from '../services/network.service.mjs';
 
-export default class NetworkModule extends BaseModule {
+// Service
+import NetworkManagerService from '../services/networkmanager.service.mjs';
+
+export default class NetworkManagerModule extends BaseModule {
   constructor(options = {}) {
     super(options);
 
-    this.service = NetworkService.getService();
+    this.service = NetworkManagerService.getService();
   }
 
   async initialize() {
@@ -24,9 +28,11 @@ export default class NetworkModule extends BaseModule {
 
   readLast() {
     const lastData = this.transform(this.service.connection);
+
     if (lastData) this.data = lastData;
     else {
       this.data = '󱉊';
+
       setTimeout(() => {
         this.readLast();
       }, 100);
@@ -48,6 +54,5 @@ export default class NetworkModule extends BaseModule {
 
     const name = isWired ? 'Wired' : ssid;
     return `${icon}${name ? ` ${name}` : ''}`;
-      // .foregroundColor('#FF666666', muted);
   }
 }

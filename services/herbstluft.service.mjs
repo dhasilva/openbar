@@ -1,6 +1,8 @@
-const { on } = require('events');
+// Node
+import { on } from 'events';
 
-import { BaseService } from './base.service.mjs';
+// Base
+import BaseService from './base.service.mjs';
 
 export default class HerbstluftService extends BaseService {
   async run() {
@@ -12,6 +14,7 @@ export default class HerbstluftService extends BaseService {
       const events = output.split('\n');
   
       for (const event of events) {
+        // ref: https://herbstluftwm.org/herbstluftwm.html
         const data = event.split('\t');
         const eventType = data[0];
     

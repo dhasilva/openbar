@@ -5,13 +5,17 @@ import { on } from 'events';
 import BaseModule from './base.module.mjs';
 
 // Service
-import CPUService from '../services/cpu.service.mjs';
+import TrayerService from '../services/trayer.service.mjs';
 
-export default class CPUModule extends BaseModule {
+export default class TrayerModule extends BaseModule {
   constructor(options = {}) {
-    super(options);
+    super({
+      width: 0,
 
-    this.service = CPUService.getService();
+      ...options
+    });
+
+    this.service = TrayerService.getService();
   }
 
   async initialize() {
@@ -26,18 +30,11 @@ export default class CPUModule extends BaseModule {
     }
   }
 
-  get icon() {
-    // Siji
-    return '';
-  }
-
   readLast() {
-    this.data = this.transform(this.service.lastData) || `${this.icon}---%`;
+    this.data = this.transform(this.service.lastData || 0);
   }
 
   transform(data) {
-    if (data === null) return;
-
-    return `${this.icon}${data}%`;
+    return data < 18 ? '' : `| ${''.offset(data)}`;
   }
 }

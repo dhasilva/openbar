@@ -1,6 +1,8 @@
-const { on, EventEmitter } = require('events');
+// Node
+import { on, EventEmitter } from 'events';
 
-const shell = $`\${SHELL:-bash}`;
+// ref: https://github.com/google/zx/pull/192
+const shell = $`\${SHELL:-bash}`.stdin;
 
 export default class BaseBar {
   constructor(options = {}) {
@@ -16,7 +18,7 @@ export default class BaseBar {
       height: 22,
       x: 0,
       y: 0,
-      maxActions: 1000,
+      maxActions: 128,
       fonts: [
         {
           name: 'Terminus',
@@ -24,15 +26,11 @@ export default class BaseBar {
           offset: -2
         },
         {
-          name: 'Material Design Icons Desktop',
+          // To view Siji icons: /usr/share/siji/view.sh
+          name: 'Siji',
           size: 11,
-          offset: 0
-        },
-        {
-          name: 'FontAwesome',
-          size: 8,
-          offset: -3
-        },
+          offset: -1
+        }
       ]
     }, options);
 
@@ -54,7 +52,7 @@ export default class BaseBar {
 
     await this.initializeLemonbar();
 
-    this.initializeUpdateLoop();
+    this.initializeRenderUpdateLoop();
 
     this.initializeActionLoop();
   }
@@ -72,12 +70,13 @@ export default class BaseBar {
   }
 
   async initializeLemonbar() {
+    const geometry = `-g ${this.width}x${this.height}+${this.x}+${this.y}`
     const fonts = this.fonts.map(font => `-o ${font.offset} -f "${font.name}:size=${font.size}"`).join(' ');
-    this.lemonbar = $.raw`lemonbar -g ${this.width}x${this.height}+${this.x}+${this.y} -u ${this.lineHeight} -B "${this.background}" -F "${this.foreground}" -U "${this.lineColor}" -a ${this.maxActions} ${fonts}  -p`;
-    this.lemonbar.stdout.setMaxListeners(10000); /////
+    this.lemonbar = $raw`lemonbar ${geometry} -u ${this.lineHeight} -B "${this.background}" -F "${this.foreground}" -U "${this.lineColor}" -a ${this.maxActions} ${fonts} -p`;
   }
 
-  async initializeUpdateLoop() {
+  // Updates lemonbar input
+  async initializeRenderUpdateLoop() {
     // First render
     await new Promise(resolve => {
       this.lemonbar.stdin.write(this.toString(), null, resolve);
@@ -85,12 +84,12 @@ export default class BaseBar {
 
     for await (const [module, value] of on(this.emitter, 'update')) {
       await new Promise(resolve => {
-        // console.log(module, value)
         this.lemonbar.stdin.write(this.toString(), null, resolve);
       });
     }
   }
 
+  // Reads lemonbar output
   async initializeActionLoop() {
     for await (const chunk of on(this.lemonbar.stdout, 'data')) {
       const commands = chunk.toString().replace(/\n$/, '').split('\n');
@@ -98,7 +97,7 @@ export default class BaseBar {
       for await (let command of commands) {
         if (!command.startsWith('!')) {
           await new Promise(resolve => {
-            shell.stdin.write(`${command}\n`, null, resolve);
+            shell.write(`${command}\n`, null, resolve);
           })
         }
         else {

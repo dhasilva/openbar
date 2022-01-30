@@ -1,3 +1,9 @@
+Object.defineProperty(String.prototype, 'offset', {
+  value(width) {
+    return `%{O${width}}${this}%{O-}`;
+  }
+});
+
 Object.defineProperty(String.prototype, 'backgroundColor', {
   value(color) {
     return `%{B${color}}${this}%{B-}`;

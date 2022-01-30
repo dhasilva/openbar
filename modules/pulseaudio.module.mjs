@@ -1,7 +1,11 @@
-const { on } = require('events');
+// Node
+import { on } from 'events';
 
+// Base
 import BaseModule from './base.module.mjs';
-import AudioService from '../services/audio.service.mjs';
+
+// Service
+import PulseAudioService from '../services/pulseaudio.service.mjs';
 
 export default class AudioModule extends BaseModule {
   constructor(options = {}) {
@@ -14,7 +18,7 @@ export default class AudioModule extends BaseModule {
       down: `!${this.id};volumeDown`
     }
 
-    this.service = AudioService.getService();
+    this.service = PulseAudioService.getService();
   }
 
   async initialize() {
@@ -29,11 +33,18 @@ export default class AudioModule extends BaseModule {
     }
   }
 
+  get icon() {
+    // Siji
+    return { off: '', low: '', medium: '', high: '', over: '' };
+  }
+
   readLast() {
     const lastData = this.transform(this.service.sink);
+
     if (lastData) this.data = lastData;
     else {
-      this.data = '󰝞 ---%';
+      this.data = `${this.icon.low}---%`;
+
       setTimeout(() => {
         this.readLast();
       }, 100);
@@ -43,15 +54,16 @@ export default class AudioModule extends BaseModule {
   transform(data) {
     if (data === null) return;
 
-    const { muted, volume } = data
+    const { muted, volume } = data;
+    const { off, low, medium, high, over } = this.icon;
 
-    let icon = '󰕾'
-    if (muted) icon = '󰖁'
-    else if (volume <= 30) icon = '󰕿'
-    else if (31 <= volume && volume <= 65) icon = '󰖀'
-    else if (101 <= volume) icon = '󰝝'
+    let icon = high;
+    if (muted) icon = off;
+    else if (volume <= 30) icon = low;
+    else if (31 <= volume && volume <= 65) icon = medium;
+    else if (101 <= volume) icon = over;
 
-    return `${icon} ${data.volume}%`
+    return `${icon}${data.volume}%`
       .foregroundColor('#FF666666', muted);
   }
 
@@ -64,6 +76,6 @@ export default class AudioModule extends BaseModule {
   }
 
   async volumeDown() {
-    return this.service.volumeDown()
+    return this.service.volumeDown();
   }
 }

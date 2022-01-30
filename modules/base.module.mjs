@@ -22,8 +22,8 @@ export default class BaseModule {
 
     this.id = idCounter++;
 
-    this.text = null;
-    this.raw = null;
+    this.rawValue = null;
+    this.formattedValue = null;
 
     this.notify = null
   }
@@ -31,20 +31,20 @@ export default class BaseModule {
   async install(notify) {
     this.notify = notify;
 
-    if (this.raw === null) await this.initialize();
+    if (this.rawValue === null) await this.initialize();
   }
 
   async initialize() {
-    throw new Error('initialize function must be implemented in the module');
+    throw new Error('Initialize function must be implemented in the module');
   }
 
   set data(value) {
-    if (value === this.raw) return;
+    if (value === this.rawValue) return;
 
-    this.raw = value;
-    this.text = this.format(value);
+    this.rawValue = value;
+    this.formattedValue = this.format(value);
 
-    this.notify(this.constructor.name, this.raw);
+    this.notify(this.constructor.name, this.rawValue);
   }
 
   format(value) {
@@ -66,6 +66,6 @@ export default class BaseModule {
   }
 
   toString() {
-    return this.text;
+    return this.formattedValue;
   }
 }

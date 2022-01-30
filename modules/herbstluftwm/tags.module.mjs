@@ -1,9 +1,11 @@
-const { on } = require('events');
+// Node
+import { on } from 'events';
 
-import BaseModule from '../base.module.mjs'
+// Base
+import BaseModule from '../base.module.mjs';
+
+// Service
 import HerbstluftService from '../../services/herbstluft.service.mjs';
-
-const service = HerbstluftService.getService();
 
 export default class HerbstluftTagsModule extends BaseModule {
   constructor(options = {}) {
@@ -42,6 +44,8 @@ export default class HerbstluftTagsModule extends BaseModule {
 
       ...options
     });
+
+    this.service = HerbstluftService.getService();
   }
 
   async initialize() {
@@ -51,6 +55,8 @@ export default class HerbstluftTagsModule extends BaseModule {
   }
 
   async readTags() {
+    // Sample output: "	:1	.2	.3	.4	.5	.6	-7	:8	#9"
+    // ref: https://herbstluftwm.org/herbstluftwm.html
     const status = await $s`herbstclient tag_status ${this.monitor}`;
     let tags = status.split('\t').slice(1, -1);
 
@@ -58,7 +64,7 @@ export default class HerbstluftTagsModule extends BaseModule {
   }
 
   async listen() {
-    for await (const event of on(service.emitter, 'tags')) {
+    for await (const event of on(this.service.emitter, 'tags')) {
       await this.readTags();
     }
   }
@@ -100,6 +106,7 @@ export default class HerbstluftTagsModule extends BaseModule {
       .underline(style.underline)
       .overline(style.overline)
       .padding(style.margin)
+      // On left click, switch to tag on current monitor
       .action('left', `herbstclient focus_monitor ${this.monitor}; herbstclient use ${name}`)
       .lineColor(style.lineColor)
       .foregroundColor(style.foreground)
@@ -108,7 +115,9 @@ export default class HerbstluftTagsModule extends BaseModule {
 
   format(value) {
     return value
+      // On mouse scroll up, switch to next tag on current monitor, skipping visible tags
       .action('up', `herbstclient focus_monitor ${this.monitor}; herbstclient use_index -1 --skip-visible`)
+      // On mouse scroll down, switch to previous tag on current monitor, skipping visible tags
       .action('down', `herbstclient focus_monitor ${this.monitor}; herbstclient use_index +1 --skip-visible`)
       .padding(this.margin);
   }

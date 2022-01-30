@@ -1,4 +1,5 @@
-import { BaseService } from './base.service.mjs';
+// Base
+import BaseService from './base.service.mjs';
 
 export default class TimeService extends BaseService {
   async run() {
@@ -9,6 +10,7 @@ export default class TimeService extends BaseService {
 
     this.emitter.emit('update', this.lastData);
 
+    // Calculates time until next second for correct synchronization
     setTimeout(this.run.bind(this), 1000 - milliseconds);
   }
 }

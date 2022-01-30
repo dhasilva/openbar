@@ -1,8 +1,10 @@
-const { on } = require('events');
+// Node
+import { on } from 'events';
 
-import { BaseService } from './base.service.mjs';
+// Base
+import BaseService from './base.service.mjs';
 
-export default class AudioService extends BaseService {
+export default class PulseAudioService extends BaseService {
   constructor(options = {}) {
     super({
       step: 1,
@@ -22,17 +24,16 @@ export default class AudioService extends BaseService {
 
   async updateSink() {
     const name = await $s`LANG=en_US.utf8; pactl info | awk '/Default Sink: / {print $3}'`;
-    // sed -nE 's/^Sink #([0-9]+)$/\1/p'
-    // -n = quiet, suprime o print do que foi passado
+    // -n = quiet, supresses output
     // -E = extended regex
-    // s/ = comando "Substitute", no formato s/regex/replacement/flags. ref https://www.gnu.org/software/sed/manual/html_node/The-_0022s_0022-Command.html
-    // ^ = começo da string
-    // Sink #([0-9]+) = Como o pactl retorna o dado: "Sink #1"
-    // $ = fim da string
-    // \1 = primeiro grupo capturado, nesse caso é o id
+    // s/ = "Substitute" command, with s/regex/replacement/flags syntax. ref https://www.gnu.org/software/sed/manual/html_node/The-_0022s_0022-Command.html
+    // ^ = start of string
+    // Sink #([0-9]+) = pactl return syntax: "Sink #1"
+    // $ = end of string
+    // \1 = first captured group, the id in this case
     // p = print
-    // Esse comando pega a entrada, transforma no valor da id e printa
-    const index = await $s.raw`LANG=en_US.utf8; pactl list sinks | grep -B 4 -E "Name: ${name}" | sed -nE 's/^Sink #([0-9]+)/\\1/p'`;
+    // This command transforms the output into the id and prints it
+    const index = await $sRaw`LANG=en_US.utf8; pactl list sinks | grep -B 4 -E "Name: ${name}" | sed -nE 's/^Sink #([0-9]+)/\\1/p'`;
     const volume = await this.getVolume(index);
     const muted = await this.isMuted(index);
 
@@ -63,6 +64,7 @@ export default class AudioService extends BaseService {
           await this.updateSink();
           this.emitter.emit('sink', this.sink);
         }
+
         if (event.includes('source')) {
           await this.updateSource();
           this.emitter.emit('source', this.source);
@@ -74,11 +76,11 @@ export default class AudioService extends BaseService {
   }
 
   async getVolume(index = this.sink.index) {
-    return +await $s.raw`LANG=en_US.utf8; pactl list sinks | grep -A 15 -E "^Sink #${index}\$" | grep 'Volume:' | grep -E -v 'Base Volume:' | awk -F : '{print $3; exit}' | grep -o -P '.{0,3}%' | sed 's/.$//' | tr -d ' '`;
+    return +await $sRaw`LANG=en_US.utf8; pactl list sinks | grep -A 15 -E "^Sink #${index}\$" | grep 'Volume:' | grep -E -v 'Base Volume:' | awk -F : '{print $3; exit}' | grep -o -P '.{0,3}%' | sed 's/.$//' | tr -d ' '`;
   }
   
   async isMuted(index = this.sink.index) {
-    const muted = await $s.raw`LANG=en_US.utf8; pactl list sinks | grep -A 15 -E "^Sink #${index}\$" | awk '/Mute: / {print $2}'`;
+    const muted = await $sRaw`LANG=en_US.utf8; pactl list sinks | grep -A 15 -E "^Sink #${index}\$" | awk '/Mute: / {print $2}'`;
     return muted === 'yes';
   }
   

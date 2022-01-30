@@ -1,8 +1,10 @@
-const { on } = require('events');
+// Node
+import { on } from 'events';
 
-import { BaseService } from './base.service.mjs';
+// Base
+import BaseService from './base.service.mjs';
 
-export default class NetworkService extends BaseService {
+export default class NetworkManagerService extends BaseService {
   constructor(options = {}) {
     super({
       devices: [],
@@ -18,7 +20,6 @@ export default class NetworkService extends BaseService {
   async initialize() {
     try {
       const result = await $s`LANG=en_US.utf8; nmcli | grep -e "connected to" -e "connecting .*to"`;
-      // const result = await $`nmcli -t`;
 
       this.connection = {
         status: result.includes('connected') ? 'connected' : 'connecting',

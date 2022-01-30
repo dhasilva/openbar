@@ -1,6 +1,10 @@
-const { on } = require('events');
+// Node
+import { on } from 'events';
 
+// Base
 import BaseModule from './base.module.mjs';
+
+// Service
 import TimeService from '../services/time.service.mjs';
 
 export default class TimeModule extends BaseModule {
@@ -30,8 +34,13 @@ export default class TimeModule extends BaseModule {
     }
   }
 
+  get icon() {
+    // Siji
+    return '';
+  }
+
   readLast() {
-    this.data = this.transform(this.service.lastData) || '󰅐 --:--';
+    this.data = this.transform(this.service.lastData) || `${this.icon}--:--`;
   }
 
   transform(data) {
@@ -41,7 +50,7 @@ export default class TimeModule extends BaseModule {
     
     if (!this.showSeconds) transformed = transformed.split(':').slice(0, -1).join(':');
 
-    return `󰅐 ${transformed}`;
+    return `${this.icon}${transformed}`;
   }
 
   async toggleShowSeconds() {

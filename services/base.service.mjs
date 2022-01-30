@@ -1,9 +1,12 @@
-const { EventEmitter } = require('events');
+// Node
+import { EventEmitter } from 'events';
 
-export class BaseService {
+export default class BaseService {
   constructor(options = {}) {
     Object.assign(this, {
-      lastData: null
+      lastData: null,
+
+      autoStart: true
     }, options);
 
     this.emitter = new EventEmitter();
@@ -17,7 +20,7 @@ export class BaseService {
     if (this.instance) return this.instance;
 
     this.instance = new this();
-    this.instance.run();
+    if (this.instance.autoStart) this.instance.run();
     return this.instance;
   }
 }
