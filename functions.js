@@ -1,5 +1,8 @@
+import { $, nothrow, sleep, chalk } from 'zx';
+import which from 'which';
+
 // Returns the string response without \n at the end. For simple commands.
-export async function $s(pieces, ...args) {
+export async function $out(pieces, ...args) {
   return (await $(pieces, ...args)).toString().replace(/\n$/, '');
 }
 
@@ -14,7 +17,7 @@ export function $raw(pieces, ...args) {
   return $([str]);
 }
 
-export async function $sRaw(pieces, ...args) {
+export async function $$outRaw(pieces, ...args) {
   return (await $raw(pieces, ...args)).toString().replace(/\n$/, '');
 }
 
@@ -37,7 +40,15 @@ export function humanizeBytes(bytes, precision = null) {
     toString() {
       return `${value}${suffixes[iteration]}`;
     }
-  }
+  };
 }
 
-Object.assign(globalThis, { $s, $sRaw, $raw, humanizeBytes });
+export async function checkDependency(dependency) {
+  return which(dependency)
+    .catch(() => {
+      console.error(chalk.red(`Package ${dependency} not installed`));
+      process.exit(1);
+    });
+}
+
+export { $, nothrow, sleep };

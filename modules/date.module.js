@@ -2,16 +2,16 @@
 import { on } from 'events';
 
 // Base
-import BaseModule from './base.module.mjs';
+import BaseModule from './base.module.js';
 
 // Service
-import CPUService from '../services/cpu.service.mjs';
+import DateService from '../services/date.service.js';
 
-export default class CPUModule extends BaseModule {
+export default class DateModule extends BaseModule {
   constructor(options = {}) {
     super(options);
 
-    this.service = CPUService.getService();
+    this.service = DateService.getService();
   }
 
   async initialize() {
@@ -28,16 +28,17 @@ export default class CPUModule extends BaseModule {
 
   get icon() {
     // Siji
-    return '';
+    return '';
   }
 
   readLast() {
-    this.data = this.transform(this.service.lastData) || `${this.icon}---%`;
+    this.data = this.transform(this.service.lastData) || `${this.icon}---`;
   }
 
   transform(data) {
     if (data === null) return;
 
-    return `${this.icon}${data}%`;
+    const [firstLetter, ...rest] = data;
+    return `${this.icon}${firstLetter.toUpperCase()}${rest.join('')}`;
   }
 }

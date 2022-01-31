@@ -1,0 +1,40 @@
+env:
+  node: true
+  es2020: true
+
+extends: eslint:recommended
+
+parser: "@babel/eslint-parser" # Required for top-level await parsing
+
+parserOptions:
+  sourceType: module
+
+rules:
+  brace-style:
+    - 2
+    - stroustrup
+    - allowSingleLine: true
+
+  comma-dangle:
+    - error
+    - never
+
+  indent:
+    - error
+    - 2
+    - SwitchCase: 1
+
+  linebreak-style:
+    - error
+    - unix
+
+  no-unused-vars: 0
+
+  quotes:
+    - error
+    - single
+    - avoidEscape: true
+
+  semi:
+    - error
+    - always

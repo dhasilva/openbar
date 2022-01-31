@@ -1,8 +1,11 @@
 // Node
 import { on } from 'events';
 
+// ZX
+import { $ } from '../functions.js';
+
 // Base
-import BaseService from './base.service.mjs';
+import BaseService from './base.service.js';
 
 export default class TrayerService extends BaseService {
   constructor(options = {}) {
@@ -23,7 +26,7 @@ export default class TrayerService extends BaseService {
       const events = output.split('\n');
   
       for (const event of events) {
-        const width = event.split(' ')[1]
+        const width = event.split(' ')[1];
 
         if (this.lastData !== width) {
           this.lastData = width;

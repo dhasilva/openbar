@@ -1,9 +1,12 @@
 // Base
-import BaseService from './base.service.mjs';
+import BaseService from './base.service.js';
+
+// ZX
+import { $out } from '../functions.js';
 
 export default class TimeService extends BaseService {
   async run() {
-    const time = await $s`date '+%X;%3N'`;
+    const time = await $out`date '+%X;%3N'`;
     const [data, milliseconds] = time.split(';');
 
     this.lastData = data;

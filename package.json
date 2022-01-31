@@ -1,0 +1,36 @@
+{
+  "name": "outonobar",
+  "version": "1.0.0",
+  "description": "A simple javascript status bar built on top of lemonbar with herbstluftwm users in mind",
+  "main": "outonobar.js",
+  "type": "module",
+  "engines": {
+    "node": ">= 16.3.0"
+  },
+  "scripts": {
+    "start": "node outonobar.js --quiet",
+    "lint": "eslint \"**/*.js\""
+  },
+  "dependencies": {
+    "which": "^2.0.2",
+    "zx": "^4.3.0"
+  },
+  "devDependencies": {
+    "@babel/eslint-parser": "^7.16.5",
+    "eslint": "^8.8.0"
+  },
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dhasilva/outonobar.git"
+  },
+  "author": "Douglas Henri <douglas@henri.dev.br>",
+  "keywords": [
+    "outonobar",
+    "lemonbar",
+    "herbstluftwm",
+    "zx",
+    "statusbar"
+  ],
+  "babel": {}
+}

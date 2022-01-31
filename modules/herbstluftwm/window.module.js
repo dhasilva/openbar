@@ -1,11 +1,14 @@
 // Node
 import { on } from 'events';
 
+// ZX
+import { $out } from '../../functions.js';
+
 // Base
-import BaseModule from '../base.module.mjs' // AQUI
+import BaseModule from '../base.module.js';
 
 // Service
-import HerbstluftService from '../../services/herbstluft.service.mjs';
+import HerbstluftService from '../../services/herbstluft.service.js';
 
 export default class HerbstluftWindowModule extends BaseModule {
   constructor(options = {}) {
@@ -22,8 +25,8 @@ export default class HerbstluftWindowModule extends BaseModule {
   async initialize() {
     try {
       // ref: https://herbstluftwm.org/herbstluftwm.html
-      const tagName = await $s`herbstclient get_attr monitors.${this.monitor}.tag`;
-      this.data = this.transform(await $s`herbstclient get_attr tags.by-name.${tagName}.focused_client.title`);
+      const tagName = await $out`herbstclient get_attr monitors.${this.monitor}.tag`;
+      this.data = this.transform(await $out`herbstclient get_attr tags.by-name.${tagName}.focused_client.title`);
     }
     catch {
       // Empty frame
@@ -35,7 +38,7 @@ export default class HerbstluftWindowModule extends BaseModule {
 
   async listen() {
     for await (const [title] of on(this.service.emitter, 'window')) {
-      const focusedMonitor = await $s`herbstclient get_attr monitors.focus.index`;
+      const focusedMonitor = await $out`herbstclient get_attr monitors.focus.index`;
 
       if (focusedMonitor === this.monitor) this.data = this.transform(title);
     }

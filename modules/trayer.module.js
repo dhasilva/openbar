@@ -1,11 +1,17 @@
 // Node
 import { on } from 'events';
 
+// ZX
+import { checkDependency, nothrow, $ } from '../functions.js';
+
 // Base
-import BaseModule from './base.module.mjs';
+import BaseModule from './base.module.js';
 
 // Service
-import TrayerService from '../services/trayer.service.mjs';
+import TrayerService from '../services/trayer.service.js';
+
+await checkDependency('trayer');
+await nothrow($`killall trayer`);
 
 export default class TrayerModule extends BaseModule {
   constructor(options = {}) {

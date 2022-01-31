@@ -1,6 +1,9 @@
 // Node
 import { on, EventEmitter } from 'events';
 
+// ZX
+import { $, $raw } from '../functions.js';
+
 // ref: https://github.com/google/zx/pull/192
 const shell = $`\${SHELL:-bash}`.stdin;
 
@@ -70,7 +73,7 @@ export default class BaseBar {
   }
 
   async initializeLemonbar() {
-    const geometry = `-g ${this.width}x${this.height}+${this.x}+${this.y}`
+    const geometry = `-g ${this.width}x${this.height}+${this.x}+${this.y}`;
     const fonts = this.fonts.map(font => `-o ${font.offset} -f "${font.name}:size=${font.size}"`).join(' ');
     this.lemonbar = $raw`lemonbar ${geometry} -u ${this.lineHeight} -B "${this.background}" -F "${this.foreground}" -U "${this.lineColor}" -a ${this.maxActions} ${fonts} -p`;
   }
@@ -98,7 +101,7 @@ export default class BaseBar {
         if (!command.startsWith('!')) {
           await new Promise(resolve => {
             shell.write(`${command}\n`, null, resolve);
-          })
+          });
         }
         else {
           // Remove the ! marker and \n at the end
@@ -108,7 +111,7 @@ export default class BaseBar {
           // Find the module
           const module = this.modules.find(module => module.id === +moduleId);
           // Execute the callback
-          if (!!module) await module[callback]();
+          if (module) await module[callback]();
         }
       }
     }
@@ -123,7 +126,7 @@ export default class BaseBar {
     return [
       this.renderPosition(this.left, 'l'),
       this.renderPosition(this.center, 'c'),
-      this.renderPosition(this.right, 'r'),
+      this.renderPosition(this.right, 'r')
     ].join('');
   }
 }

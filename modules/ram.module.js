@@ -1,11 +1,13 @@
 // Node
 import { on } from 'events';
 
+import { humanizeBytes } from '../functions.js';
+
 // Base
-import BaseModule from './base.module.mjs';
+import BaseModule from './base.module.js';
 
 // Service
-import RAMService from '../services/ram.service.mjs';
+import RAMService from '../services/ram.service.js';
 
 export default class RAMModule extends BaseModule {
   constructor(options = {}) {

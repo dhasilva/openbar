@@ -1,8 +1,11 @@
 // Node
 import { on } from 'events';
 
+// ZX
+import { $, $out, sleep } from '../functions.js';
+
 // Base
-import BaseService from './base.service.mjs';
+import BaseService from './base.service.js';
 
 export default class NetworkManagerService extends BaseService {
   constructor(options = {}) {
@@ -19,7 +22,7 @@ export default class NetworkManagerService extends BaseService {
 
   async initialize() {
     try {
-      const result = await $s`LANG=en_US.utf8; nmcli | grep -e "connected to" -e "connecting .*to"`;
+      const result = await $out`LANG=en_US.utf8; nmcli | grep -e "connected to" -e "connecting .*to"`;
 
       this.connection = {
         status: result.includes('connected') ? 'connected' : 'connecting',

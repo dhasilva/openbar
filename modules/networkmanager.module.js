@@ -2,10 +2,10 @@
 import { on } from 'events';
 
 // Base
-import BaseModule from './base.module.mjs';
+import BaseModule from './base.module.js';
 
 // Service
-import NetworkManagerService from '../services/networkmanager.service.mjs';
+import NetworkManagerService from '../services/networkmanager.service.js';
 
 export default class NetworkManagerModule extends BaseModule {
   constructor(options = {}) {
@@ -42,15 +42,15 @@ export default class NetworkManagerModule extends BaseModule {
   transform(data) {
     if (data === null) return;
 
-    const { status, ssid } = data
+    const { status, ssid } = data;
     const isWired = !!ssid && ssid.includes('Wired');
 
     let icon = '';
 
-    if (status === 'disconnected') icon = '󰣽';
-    if (status === 'connecting') icon = '󱉊';
-    if (status === 'limited') icon = '󰣻';
-    if (status === 'connected') icon = isWired ? '󰈀' : '󰣺';
+    if (status === 'disconnected') icon = '';
+    if (status === 'connecting') icon = '';
+    if (status === 'limited') icon = '';
+    if (status === 'connected') icon = isWired ? '': '';
 
     const name = isWired ? 'Wired' : ssid;
     return `${icon}${name ? ` ${name}` : ''}`;

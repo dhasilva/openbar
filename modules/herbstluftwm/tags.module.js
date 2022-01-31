@@ -1,11 +1,14 @@
 // Node
 import { on } from 'events';
 
+// ZX
+import { $out } from '../../functions.js';
+
 // Base
-import BaseModule from '../base.module.mjs';
+import BaseModule from '../base.module.js';
 
 // Service
-import HerbstluftService from '../../services/herbstluft.service.mjs';
+import HerbstluftService from '../../services/herbstluft.service.js';
 
 export default class HerbstluftTagsModule extends BaseModule {
   constructor(options = {}) {
@@ -57,7 +60,7 @@ export default class HerbstluftTagsModule extends BaseModule {
   async readTags() {
     // Sample output: "	:1	.2	.3	.4	.5	.6	-7	:8	#9"
     // ref: https://herbstluftwm.org/herbstluftwm.html
-    const status = await $s`herbstclient tag_status ${this.monitor}`;
+    const status = await $out`herbstclient tag_status ${this.monitor}`;
     let tags = status.split('\t').slice(1, -1);
 
     this.data = tags.map(tag => this.formatTag(tag)).join('');

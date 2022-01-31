@@ -48,7 +48,7 @@ Object.defineProperty(String.prototype, 'overline', {
 
 Object.defineProperty(String.prototype, 'padding', {
   value(padding) {
-    const paddingText = ' '.repeat(padding)
+    const paddingText = ' '.repeat(padding);
     return `${paddingText}${this}${paddingText}`;
   }
 });

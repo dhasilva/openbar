@@ -2,10 +2,10 @@
 import { on } from 'events';
 
 // Base
-import BaseModule from './base.module.mjs';
+import BaseModule from './base.module.js';
 
 // Service
-import TimeService from '../services/time.service.mjs';
+import TimeService from '../services/time.service.js';
 
 export default class TimeModule extends BaseModule {
   constructor(options = {}) {

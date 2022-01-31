@@ -1,15 +1,18 @@
 // Bar
-import BaseBar from './base.bar.mjs';
+import BaseBar from './base.bar.js';
+
+// ZX
+import { $out, $raw } from '../functions.js';
 
 // Modules
-import TagsModule from '../modules/herbstluftwm/tags.module.mjs';
-import WindowModule from '../modules/herbstluftwm/window.module.mjs';
-import PulseAudioModule from '../modules/pulseaudio.module.mjs';
-import CPUModule from '../modules/cpu.module.mjs';
-import RAMModule from '../modules/ram.module.mjs';
-import DateModule from '../modules/date.module.mjs';
-import TimeModule from '../modules/time.module.mjs';
-import TrayerModule from '../modules/trayer.module.mjs';
+import TagsModule from '../modules/herbstluftwm/tags.module.js';
+import WindowModule from '../modules/herbstluftwm/window.module.js';
+import PulseAudioModule from '../modules/pulseaudio.module.js';
+import CPUModule from '../modules/cpu.module.js';
+import RAMModule from '../modules/ram.module.js';
+import DateModule from '../modules/date.module.js';
+import TimeModule from '../modules/time.module.js';
+import TrayerModule from '../modules/trayer.module.js';
 
 export default class HerbstluftFullBar extends BaseBar {
   constructor(options = {}) {
@@ -29,7 +32,7 @@ export default class HerbstluftFullBar extends BaseBar {
   }
 
   async initializeData() {
-    const geometry = await $s`herbstclient monitor_rect ${this.monitor}`;
+    const geometry = await $out`herbstclient monitor_rect ${this.monitor}`;
     const [x, y, width, height] = geometry.split(' ');
     this.x = x;
     this.y = y;

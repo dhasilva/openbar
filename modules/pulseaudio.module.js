@@ -2,10 +2,10 @@
 import { on } from 'events';
 
 // Base
-import BaseModule from './base.module.mjs';
+import BaseModule from './base.module.js';
 
 // Service
-import PulseAudioService from '../services/pulseaudio.service.mjs';
+import PulseAudioService from '../services/pulseaudio.service.js';
 
 export default class AudioModule extends BaseModule {
   constructor(options = {}) {
@@ -13,10 +13,10 @@ export default class AudioModule extends BaseModule {
 
     this.actions = {
       left: `!${this.id};toggleMute`,
-      right: `pavucontrol`,
+      right: 'pavucontrol',
       up: `!${this.id};volumeUp`,
       down: `!${this.id};volumeDown`
-    }
+    };
 
     this.service = PulseAudioService.getService();
   }

@@ -3,8 +3,8 @@ let idCounter = 0;
 export default class BaseModule {
   constructor(options = {}) {
     Object.assign(this, {
-      background: "-",
-      foreground: "-",
+      background: '-',
+      foreground: '-',
       underline: false,
       overline: false,
       lineColor: '-',
@@ -25,7 +25,7 @@ export default class BaseModule {
     this.rawValue = null;
     this.formattedValue = null;
 
-    this.notify = null
+    this.notify = null;
   }
 
   async install(notify) {
@@ -48,7 +48,7 @@ export default class BaseModule {
   }
 
   format(value) {
-    if (!value) return value
+    if (!value) return value;
 
     return value
       .padding(this.padding)

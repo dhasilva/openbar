@@ -1,8 +1,11 @@
 // Node
 import { on } from 'events';
 
+// ZX
+import { $, sleep } from '../functions.js';
+
 // Base
-import BaseService from './base.service.mjs';
+import BaseService from './base.service.js';
 
 export default class HerbstluftService extends BaseService {
   async run() {
